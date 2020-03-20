@@ -19,12 +19,14 @@ function displayTurkishLCs(){
             /**
              * Changing the sort method so it can arrange the values from small ID to Bigger ID
              */
-            /*function compare(a,b){
+            /*
+            function compare(a,b){
                return a-b;
             }
             arrayTurkishLCs.sort(compare);
-            //console.log(arrayTurkishLCs);
             */
+            //console.log(arrayTurkishLCs);
+            
                 arrayTurkishLCs.forEach(turkishLCKey => {
                     $('#table thead tr').append("" +
                         "<th>"+ turkishLCKey + "</th>"
@@ -45,16 +47,17 @@ function displayAlgerianLCs(){
 
             mainData = data.analytics.total_applications.children.buckets;
 
+            /*
             for (let i=0; i<mainData.length; i++){
 
-               /* $('#table tbody').append("" +
+                $('#table tbody').append("" +
                     "<tr>" +
                     "<th scope='row'>"+mainData[i].key +"</th>" +
                     "</tr>"+
                     "");
-                    */
+                    
             }
-
+            */
         }
     })
 }
@@ -79,24 +82,24 @@ function displayApplications(){
             let i = 0;
             
             for(lcAlgeria of algeriaLcs){
-                obj[i] = { "id" : lcAlgeria.key }
+                obj[i] = [ lcAlgeria.key ]
                 i++;
             }
 
              /**
              * Add Turkey's LCs data to each LC of algeria 
              */
-
+            
             var j = k = 0;
             for(lcAlgeria of algeriaLcs){
 
                 for(lcTurkey of lcAlgeria.children.buckets){
 
                     obj[j][k] = { 
+                                    "id" : lcAlgeria.key,
                                     "id_turkey" : lcTurkey.key, 
                                     "applications" : lcTurkey.doc_count,
                                     "applicants" : lcTurkey.applicants.value
-
                                 }
                     k++;
                 }
@@ -117,30 +120,28 @@ function test(){
         type: 'GET',
         success: function(data){
 
+            //when you iterate the first time everything is good tho the second time the second 
+            //row of data also gets pushed to the same ol so that's the problem.
+            
+            let el;
+            for(data of obj){
+               
+                el = $("<ol data-key="+data[0].id+"></ol>");
+                $(".list").append(el);
 
-            for (let j = 0; j < obj.length; j++) {
-                
-                let lc = obj[j];
-                //console.log('lc turkey');
-
-                $('#table tbody').append("" +
-                    "<tr>"+
-                        "<th scope='row'>"+
-                            lc.id
-                        +"</th>"
-                    +"<tr>");
-
-                /*for (let i = 0; i < lc.length; i++) {
-    
-                    console.log(lc[i].id_turkey);
+                for(lc of data){
                     
-                    $('#table tbody tr').append("" +
-                        +"</td>"+
-                            lc[i].id_turkey
-                        +"</td>");
-                }*/
+                    if($(".list ol").data('key') == data[0].id){
+
+                        $(".list ol").append("<li>"+lc.id_turkey+"</li>");
+
+                    }
+                    
+                }
+
+                key++; 
+
             }
-           
         }
     })
 }
